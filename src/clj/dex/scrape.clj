@@ -21,11 +21,10 @@
           next-els (rest els)]
       (if (nil? el)
         table-map
-        (condp = tag
-          :h3 (recur next-els (text el) table-map)
-          :h4 (recur next-els (text el) table-map)
-          :table (recur next-els last-header (assoc table-map last-header el))
-          (recur next-els last-header table-map))))))
+        (cond
+          (.contains [:h3 :h4] tag) (recur next-els (text el) table-map)
+          (= tag :table) (recur next-els last-header (assoc table-map last-header el))
+          :else (recur next-els last-header table-map))))))
 
 (defprocessor :pokemon-list
   :process-fn (fn [doc ctx]
